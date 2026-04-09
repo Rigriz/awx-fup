@@ -1,0 +1,53 @@
+---
+- name: Reset GNOME GUI appearance only
+  hosts: all
+  become: no
+
+  tasks:
+    - name: Reset wallpaper/background
+      command: gsettings reset org.gnome.desktop.background picture-uri
+      register: wallpaper_result
+
+    - name: Show wallpaper result
+      debug:
+        msg: "{{ inventory_hostname }} wallpaper reset rc={{ wallpaper_result.rc }} stdout={{ wallpaper_result.stdout }} stderr={{ wallpaper_result.stderr }}"
+
+    - name: Reset dark mode wallpaper
+      command: gsettings reset org.gnome.desktop.background picture-uri-dark
+      register: wallpaper_dark_result
+
+    - name: Show dark wallpaper result
+      debug:
+        msg: "{{ inventory_hostname }} dark wallpaper reset rc={{ wallpaper_dark_result.rc }} stdout={{ wallpaper_dark_result.stdout }} stderr={{ wallpaper_dark_result.stderr }}"
+
+    - name: Reset desktop scaling
+      command: gsettings reset org.gnome.desktop.interface scaling-factor
+      register: scaling_result
+
+    - name: Show scaling result
+      debug:
+        msg: "{{ inventory_hostname }} scaling reset rc={{ scaling_result.rc }} stdout={{ scaling_result.stdout }} stderr={{ scaling_result.stderr }}"
+
+    - name: Reset text scaling
+      command: gsettings reset org.gnome.desktop.interface text-scaling-factor
+      register: text_scaling_result
+
+    - name: Show text scaling result
+      debug:
+        msg: "{{ inventory_hostname }} text scaling reset rc={{ text_scaling_result.rc }} stdout={{ text_scaling_result.stdout }} stderr={{ text_scaling_result.stderr }}"
+
+    - name: Reset appearance settings
+      command: gsettings reset-recursively org.gnome.desktop.interface
+      register: interface_result
+
+    - name: Show appearance result
+      debug:
+        msg: "{{ inventory_hostname }} interface reset rc={{ interface_result.rc }} stdout={{ interface_result.stdout }} stderr={{ interface_result.stderr }}"
+
+    - name: Reset window manager appearance
+      command: gsettings reset-recursively org.gnome.desktop.wm.preferences
+      register: wm_result
+
+    - name: Show window manager result
+      debug:
+        msg: "{{ inventory_hostname }} wm reset rc={{ wm_result.rc }} stdout={{ wm_result.stdout }} stderr={{ wm_result.stderr }}"
