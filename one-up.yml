@@ -1,0 +1,6 @@
+---
+- hosts: L81
+  become: yes
+  tasks:
+    - name: Run Fedora upgrade download
+      command: dnf system-upgrade download --releasever=43 -y
