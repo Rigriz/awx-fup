@@ -1,5 +1,5 @@
 ---
-- name: Update Fedora and install GNOME
+- name: Upgrade Fedora and monitor progress
   hosts: all
   become: yes
 
@@ -9,16 +9,19 @@
         name: "*"
         state: latest
         update_cache: yes
+      register: update_result
 
-    - name: Install GNOME Desktop
-      command: dnf groupinstall -y "Server with GUI"
+    - name: Show update details
+      debug:
+        var: update_result
 
-    - name: Set graphical mode as default
-      command: systemctl set-default graphical.target
-     
-    - name: Install latest update Desktop
-      command: sudo dnf system-upgrade download --releasever=43  -y "Server with GUI"
-        
-    - name: Start Fedora system upgrade reboot
-      command: sudo dnf system-upgrade reboot  "reboot to new update"
-  
+    - name: Download Fedora upgrade
+      command: dnf system-upgrade download --releasever=43 -y
+      register: upgrade_download
+
+    - name: Show upgrade download result
+      debug:
+        var: upgrade_download.stdout
+
+    - name: Start Fedora upgrade reboot
+      command: dnf system-upgrade reboot
