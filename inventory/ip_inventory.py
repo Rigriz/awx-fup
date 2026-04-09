@@ -6,7 +6,7 @@ import sys
 inventory = {"_meta": {"hostvars": {}}, "all": {"hosts": []}}
 try:
     # Fetch inventory from your API
-    response = requests.get("http://localhost:8090/inventory", timeout=5)
+    response = requests.get("http://172.16.47.2:8090/inventory", timeout=5)
     response.raise_for_status()  # Raise error for HTTP issues
     data = response.json()
 except Exception:
