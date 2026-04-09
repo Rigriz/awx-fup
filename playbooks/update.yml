@@ -15,7 +15,14 @@
 
     - name: Set graphical mode as default
       command: systemctl set-default graphical.target
+     
+    - name: Install latest update Desktop
+      command: sudo dnf system-upgrade download --releasever=43  -y "Server with GUI"
 
     - name: Reboot system
       reboot:
         reboot_timeout: 900
+        
+    - name: rebot Desktop
+      command: sudo dnf system-upgrade reboot  "reboot to new update"
+  
