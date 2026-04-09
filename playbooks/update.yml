@@ -1,14 +1,21 @@
-- name: Update all systems
+---
+- name: Update Fedora and install GNOME
   hosts: all
   become: yes
 
   tasks:
-    - name: Update packages
+    - name: Update all packages
       dnf:
         name: "*"
         state: latest
+        update_cache: yes
 
-    - name: Install GNOME group
-      dnf:
-        name: "@Server with GUI"
-        state: present
+    - name: Install GNOME Desktop
+      command: dnf groupinstall -y "Server with GUI"
+
+    - name: Set graphical mode as default
+      command: systemctl set-default graphical.target
+
+    - name: Reboot system
+      reboot:
+        reboot_timeout: 900
