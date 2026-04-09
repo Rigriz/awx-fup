@@ -3,7 +3,7 @@ import requests
 import json
 import sys
 
-API_URL = "http://localhost:8090/regester"
+API_URL = "http://localhost:8090/inventroy"
 
 # You can pass lab name as argument OR hardcode
 LAB_NAME = "411C"
