@@ -2,5 +2,14 @@
 - hosts: L81
   become: yes
   tasks:
-    - name: Run Fedora upgrade download
-      command: dnf system-upgrade download --releasever=43 -y
+    - name: Update fedora repos first
+      dnf:
+        name: fedora-gpg-keys
+        state: latest
+
+    - name: Download Fedora upgrade
+      command: >
+        dnf system-upgrade download
+        --releasever=43
+        --allowerasing
+        -y
