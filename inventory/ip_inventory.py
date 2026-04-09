@@ -15,6 +15,7 @@ except Exception:
     sys.exit(0)
 # Select the lab you want
 lab = data.get("411C", {})
+print("DATA got: ",lab)
 # Iterate over sides (R/L) and devices
 for side in ["R", "L"]:
     for device_name, info in lab.get(side, {}).items():
