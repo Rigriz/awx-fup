@@ -23,6 +23,6 @@
       reboot:
         reboot_timeout: 900
         
-    - name: rebot Desktop
+    - name: Start Fedora system upgrade reboot
       command: sudo dnf system-upgrade reboot  "reboot to new update"
   
