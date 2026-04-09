@@ -28,6 +28,7 @@ for side in ["R", "L"]:
                 "ansible_host": ip,
                 "ansible_user": "bmsit",
                 "ansible_password": "123456",
+                "ansible_become_password":"123456",
                 "ansible_ssh_common_args": "-o StrictHostKeyChecking=no"
             }
 
