@@ -2,9 +2,8 @@
 - hosts: L81
   become: yes
   tasks:
-    - name: reto update
-      dnf:
-       name: system-upgrade reboot
+    - name: Run system upgrade reboot
+      command: dnf system-upgrade reboot
 #    - name: Update fedora repos first
  #     dnf:
 #        name: fedora-gpg-keys
