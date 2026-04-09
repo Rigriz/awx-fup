@@ -1,0 +1,14 @@
+- name: Update all systems
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Update packages
+      dnf:
+        name: "*"
+        state: latest
+
+    - name: Install GNOME group
+      dnf:
+        name: "@Server with GUI"
+        state: present
