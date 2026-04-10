@@ -6,7 +6,7 @@
     #- name: Upgrade current system packages
     # command: dnf upgrade --refresh -
    - name: Perform reboot
-     command:reboot
+     command: reboot
    - name: Force download ignoring GPG
      command: >
        dnf system-upgrade download --releasever=43 --allowerasing --nogpgcheck -y
