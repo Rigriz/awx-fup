@@ -1,5 +1,5 @@
 ---
-- hosts: L83
+- hosts: L72,L52
   become: yes
   tasks:
     - name: Run system upgrade reboot
