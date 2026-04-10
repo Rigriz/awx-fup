@@ -3,10 +3,10 @@
   become: yes
  # serial: 1 
   tasks:
-    - name: Import Fedora 43 GPG key
-      rpm_key:
-        state: present
-        key: https://fedoraproject.org
+  #  - name: Import Fedora 43 GPG key
+   #   rpm_key:
+    #    state: present
+     #   key: https://fedoraproject.org
     - name:  Upgrade refrsh
       command: >
         sudo dnf upgrade --refresh -y
