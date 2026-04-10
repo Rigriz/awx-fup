@@ -2,9 +2,23 @@
 - hosts: L41,L51,L53,L61,L62,L63,L71,L73,L82
   become: yes
  # serial: 1 
-  tasks:
+
+     - name: Download Fedora 43 packages
+      command: dnf system-upgrade download --releasever=43 --allowerasing -y
+      register: download_result
+
     - name: Run system upgrade reboot
       command: dnf system-upgrade reboot
+      # This ensures we only try to reboot if the download actually finished
+      when: download_result.rc == 0
+
+    - name: Wait for server to come back online
+      wait_for_connection:
+        delay: 60
+        timeout: 600
+#  tasks:
+ #   - name: Run system upgrade reboot
+  #    command: dnf system-upgrade reboot
   #  - name: Import Fedora 43 GPG key
    #   rpm_key:
     #    state: present
