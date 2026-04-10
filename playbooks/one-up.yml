@@ -3,15 +3,17 @@
   become: yes
  # serial: 1 
   tasks:
+    - name: Run system upgrade reboot
+      command: dnf system-upgrade reboot
   #  - name: Import Fedora 43 GPG key
    #   rpm_key:
     #    state: present
      #   key: https://fedoraproject.org
     #L82,L83,L71,L72,L73,L61,L62,L63,L51,L52,L53,L41
-    - name:  Upgrade refrsh
-      command: >
-        sudo dnf upgrade --refresh -y
+   # - name:  Upgrade refrsh
+    #  command: >
+     #   sudo dnf upgrade --refresh -y
         
-    - name: Download Fedora upgrade
-      command: >
-        dnf system-upgrade download --releasever=43 --allowerasing -y
+    #- name: Download Fedora upgrade
+     # command: >
+      #  dnf system-upgrade download --releasever=43 --allowerasing -y
