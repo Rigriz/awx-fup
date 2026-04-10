@@ -5,14 +5,14 @@
   tasks:
     #- name: Upgrade current system packages
     # command: dnf upgrade --refresh -
-   - name: Perform reboot
-     command: reboot
+   #- name: Perform reboot
+    # command: reboot
    - name: Force download ignoring GPG
      command: >
        dnf system-upgrade download --releasever=43 --allowerasing --nogpgcheck -y
        
-   - name: Perform system upgrade reboot
-     command: sudo dnf system-upgrade reboot
+ #  - name: Perform system upgrade reboot
+  #   command: sudo dnf system-upgrade reboot
    # - name: Import Fedora 43 GPG key
       # Note: Points to the actual key file, not the homepage
     #  rpm_key:
