@@ -1,7 +1,7 @@
 ---
 - hosts: L82,L83,L71,L72,L73,L61,L62,L63,L51,L52,L53,L41
   become: yes
-  serial: 1 
+ # serial: 1 
   tasks:
     - name: Import Fedora 43 GPG key
       rpm_key:
