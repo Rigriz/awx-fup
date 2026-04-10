@@ -2,16 +2,14 @@
 - hosts: L82,L83,L71,L72,L73,L61,L62,L63,L51,L52,L53,L41
   become: yes
   tasks:
-    - name: Run system upgrade reboot
-      command: dnf system-upgrade reboot
-#    - name: Update fedora repos first
- #     dnf:
-#        name: fedora-gpg-keys
-#        state: latest
+    - name: Update fedora repos first
+      dnf:
+        name: fedora-gpg-keys
+        state: latest
 
- #   - name: Download Fedora upgrade
-  #    command: >
-  #      dnf system-upgrade download
-   #     --releasever=43
-    #    --allowerasing
-     #   -y
+    - name: Download Fedora upgrade
+      command: >
+        dnf system-upgrade download
+        --releasever=43
+        --allowerasing
+        -y
