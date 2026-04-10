@@ -3,32 +3,19 @@
   become: yes
  # serial: 1 
   tasks:
-    - name: Download Fedora 43 packages
-      command: dnf system-upgrade download --releasever=43 --allowerasing -y
-      register: download_result
-
-    - name: Run system upgrade reboot
-      command: dnf system-upgrade reboot
-      # This ensures we only try to reboot if the download actually finished
-      when: download_result.rc == 0
-
-    - name: Wait for server to come back online
-      wait_for_connection:
-        delay: 60
-        timeout: 600
-
-#  tasks:
- #   - name: Run system upgrade reboot
-  #    command: dnf system-upgrade reboot
-  #  - name: Import Fedora 43 GPG key
-   #   rpm_key:
-    #    state: present
-     #   key: https://fedoraproject.org
-    #L82,L83,L71,L72,L73,L61,L62,L63,L51,L52,L53,L41
-   # - name:  Upgrade refrsh
-    #  command: >
-     #   sudo dnf upgrade --refresh -y
+     - name: Run system upgrade reboot
+       command: dnf system-upgrade reboot
+     - name: Import Fedora 43 GPG key
+       rpm_key:
+         state: present
+         key: https://fedoraproject.org
+         #L82,L83,L71,L72,L73,L61,L62,L63,L51,L52,L53,L41
+      - name:  Upgrade refrsh
+        command: >
+        sudo dnf upgrade --refresh -y
         
-    #- name: Download Fedora upgrade
-     # command: >
-      #  dnf system-upgrade download --releasever=43 --allowerasing -y
+      - name: Download Fedora upgrade
+         command: >
+         sudo dnf system-upgrade download --releasever=43 --allowerasing -y
+       - name: Run system upgrade reboot
+         command: dnf system-upgrade reboot
