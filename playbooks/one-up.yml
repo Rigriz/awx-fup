@@ -1,7 +1,7 @@
 ---
 - hosts: L41,L51,L53,L61,L62,L63,L71,L73,L82
   become: yes
-  serial: 1 
+#  serial: 1 
   tasks:
     #- name: Upgrade current system packages
     # command: dnf upgrade --refresh -y
