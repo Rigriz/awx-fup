@@ -4,7 +4,7 @@
   serial: 1 
   tasks:
    - name: Disable broken PyCharm repo
-      command: dnf config-manager --set-disabled copr:copr.fedorainfracloud.org:phracek:PyCharm
+      command: sudo dnf config-manager --set-disabled copr:copr.fedorainfracloud.org:phracek:PyCharm
       ignore_errors: yes
 
     - name: Import Fedora 43 GPG key
