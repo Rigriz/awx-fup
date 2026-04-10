@@ -1,5 +1,5 @@
 ---
-- hosts: L41,L51,L53,L61,L62,L63,L71,L73,L82
+- hosts: L52,L72,L83,L41
   become: yes
 #  serial: 1 
   tasks:
