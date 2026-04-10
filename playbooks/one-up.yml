@@ -1,16 +1,16 @@
 ---
 - hosts: L41,L51,L53,L61,L62,L63,L71,L73,L82
   become: yes
-  serial: 1 
+  #serial: 1 
   tasks:
-    - name: Upgrade current system packages
-      command: dnf upgrade --refresh -y
+    #- name: Upgrade current system packages
+    # command: dnf upgrade --refresh -y
 
-    - name: Import Fedora 43 GPG key
+   # - name: Import Fedora 43 GPG key
       # Note: Points to the actual key file, not the homepage
-      rpm_key:
-        state: present
-        key: https://fedoraproject.org
+    #  rpm_key:
+     #   state: present
+      #  key: https://fedoraproject.org
 
     - name: Download Fedora 43 upgrade packages
       command: sudo dnf system-upgrade download --releasever=43 --allowerasing -y
