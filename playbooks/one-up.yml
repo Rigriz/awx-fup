@@ -8,6 +8,9 @@
    - name: Force download ignoring GPG
      command: >
        dnf system-upgrade download --releasever=43 --allowerasing --nogpgcheck -y
+       
+   - name: Perform system upgrade reboot
+     command: sudo dnf system-upgrade reboot
    # - name: Import Fedora 43 GPG key
       # Note: Points to the actual key file, not the homepage
     #  rpm_key:
@@ -15,9 +18,6 @@
       #  key: https://fedoraproject.org
 
   
-
-    - name: Perform system upgrade reboot
-      command: sudo dnf system-upgrade reboot
       # Only reboots if the download task succeeded
 
 
