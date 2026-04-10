@@ -3,10 +3,15 @@
   become: yes
   serial: 1 
   tasks:
-    - name: Update fedora repos first
-      dnf:
-        name: fedora-gpg-keys
-        state: latest
+    - name: Disable broken PyCharm repo
+      command: dnf config-manager --set-disabled copr:copr.fedorainfracloud.org:phracek:PyCharm
+      ignore_errors: yes
+
+    - name: Import Fedora 43 GPG key
+      rpm_key:
+        state: present
+        key: https://fedoraproject.org
+
     - name:  Upgrade refrsh
       command: >
         sudo dnf upgrade --refresh -y
