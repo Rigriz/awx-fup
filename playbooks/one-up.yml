@@ -6,10 +6,10 @@
       dnf:
         name: fedora-gpg-keys
         state: latest
-
+    - name:  Upgrade refrsh
+      command: >
+        sudo dnf upgrade --refresh -y
+        
     - name: Download Fedora upgrade
       command: >
-        dnf system-upgrade download
-        --releasever=43
-        --allowerasing
-        -y
+        dnf system-upgrade download --releasever=43 --allowerasing -y
