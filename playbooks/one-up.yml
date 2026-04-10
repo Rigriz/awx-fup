@@ -12,12 +12,10 @@
      #   state: present
       #  key: https://fedoraproject.org
 
-    - name: Download Fedora 43 upgrade packages
-      command: sudo dnf system-upgrade download --releasever=43 --allowerasing -y
-      register: download_status
+  
 
     - name: Perform system upgrade reboot
       command: sudo dnf system-upgrade reboot
       # Only reboots if the download task succeeded
-      when: download_status.rc == 0
+
 
