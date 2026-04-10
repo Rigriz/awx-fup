@@ -7,9 +7,19 @@
     # command: dnf upgrade --refresh -
    #- name: Perform reboot
     # command: reboot
-   - name: Force download ignoring GPG
-     command: >
-       dnf system-upgrade download --releasever=43 --allowerasing --nogpgcheck -y
+    - name: 1. Ensure system-upgrade plugin is installed
+      dnf:
+        name: dnf-plugin-system-upgrade
+        state: present
+
+    - name: 2. Clear metadata cache (Fixes 404/Hash errors)
+      shell: dnf clean all
+
+    - name: 3. Download Fedora 43 Upgrade
+      shell: dnf system-upgrade download --releasever=43 --allowerasing -y --nogpgcheck
+      async: 3600
+      poll: 30
+      register: download_out
        
  #  - name: Perform system upgrade reboot
   #   command: sudo dnf system-upgrade reboot
