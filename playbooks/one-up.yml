@@ -10,4 +10,5 @@
       shell: dnf clean all
     - name: 3.Download Fedora 43 Upgrade
       shell: sudo dnf system-upgrade download --releasever=43 --allowerasing -y --nogpgc 
-
+      register: download_result
+        
