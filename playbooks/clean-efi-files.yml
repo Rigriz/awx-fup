@@ -1,5 +1,5 @@
 ---
-- hosts: L31,L32,L33,L42
+- hosts: L31,L32,L42
   become: yes
   tasks:
     - name: 1. Remove old Fedora firmware and update logs
