@@ -3,6 +3,12 @@
   become: yes
   tasks:
     - name: Run system upgrade reboot
-      command: sudo dnf system-upgrade reboot
+      command: dnf system-upgrade reboot
+    - name: 1.Upgrade current system packages
+      command: dnf upgrade --refresh -y
+    - name: 2.Clear metadata cache (Fixes 404/Hash errors)
+      shell: dnf clean all
+    - name: 3.Download Fedora 43 Upgrade
+      shell: sudo dnf system-upgrade download --releasever=43 --allowerasing -y --nogpgcheck
 
       
