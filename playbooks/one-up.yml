@@ -1,5 +1,5 @@
 ---
-- hosts: L21,L22,L23,L31,L32,L33,L42,L43
+- hosts: L31,L32,L42
   become: yes
   tasks:
     - name: 1. Upgrade current packages
