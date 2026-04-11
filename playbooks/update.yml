@@ -3,6 +3,6 @@
   become: yes
   tasks:
     - name: Run system upgrade reboot
-      command: dnf system-upgrade reboot
+      command: sudo dnf system-upgrade reboot
 
       
