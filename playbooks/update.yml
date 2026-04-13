@@ -1,14 +1,14 @@
 ---
-- hosts: L21,L22,L23,L31,L32,L33,L42,L43
+- hosts: L21,L22,L23,L31,L32,L33,L41,L42,L43,L51,L52,L53,L61,L62,L63,L71,L72,L73,L81,L82,L83
   become: yes
   tasks:
-    - name: Run system upgrade reboot
-      command: dnf system-upgrade reboot
-    - name: 1.Upgrade current system packages
-      command: dnf upgrade --refresh -y
-    - name: 2.Clear metadata cache (Fixes 404/Hash errors)
-      shell: dnf clean all
-    - name: 3.Download Fedora 43 Upgrade
-      shell: sudo dnf system-upgrade download --releasever=43 --allowerasing -y --nogpgcheck
+    - name: Run system upgrade reboot uname
+      command: uname -r
+    - name: 1.Upgrade current system packages cat
+      command: cat /etc/fedora-release
+  #  - name: 2.Clear metadata cache (Fixes 404/Hash errors)
+   #   shell: dnf clean all
+    #- name: 3.Download Fedora 43 Upgrade
+     # shell: sudo dnf system-upgrade download --releasever=43 --allowerasing -y --nogpgcheck
 
       
