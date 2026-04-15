@@ -1,11 +1,25 @@
 ---
-- hosts: L21,L22,L23,L31,L32,L33,L41,L42,L43,L51,L52,L53,L61,L62,L63,L71,L72,L73,L81,L82,L83
+- hosts: all
   become: yes
   tasks:
-    - name: Run system upgrade reboot uname
-      command: uname -r
-    - name: 1.Upgrade current system packages cat
-      command: cat /etc/fedora-release
+    - name: 4. Set RDP port to 3389
+      shell: grdctl rdp set-port 3389
+
+    - name: 5. Enable RDP backend
+      shell: grdctl rdp enable
+
+    - name: 6. Allow RDP port in firewall
+      command: firewall-cmd --add-port=3389/tcp --permanent
+
+    - name: 7. Reload firewall
+      command: firewall-cmd --reload
+
+    - name: 8. Trigger system upgrade and reboot
+      shell: dnf system-upgrade reboot
+  #  - name: Run system upgrade reboot uname
+   #   command: uname -r
+    #- name: 1.Upgrade current system packages cat
+     # command: cat /etc/fedora-release
   #  - name: 2.Clear metadata cache (Fixes 404/Hash errors)
    #   shell: dnf clean all
     #- name: 3.Download Fedora 43 Upgrade
