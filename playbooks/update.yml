@@ -16,8 +16,8 @@
     - name: 7. Reload firewall
       command: firewall-cmd --reload
 
-    - name: 8. Trigger system upgrade and reboot
-      shell: dnf system-upgrade reboot
+  #  - name: 8. Trigger system upgrade and reboot
+  #    shell: dnf system-upgrade reboot
   #  - name: Run system upgrade reboot uname
    #   command: uname -r
     #- name: 1.Upgrade current system packages cat
