@@ -2,8 +2,9 @@
 - hosts: all
   become: yes
   tasks:
-   - name: 4. Set RDP login credentials
-      shell: grdctl rdp set-credentials admin bmsit123
+    - name: 4. Set RDP login credentials
+      shell: grdctl --system rdp set-credentials admin bmsit123
+
     - name: 4. Set RDP port to 3389
       shell: grdctl rdp set-port 3389
 
