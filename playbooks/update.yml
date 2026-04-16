@@ -1,21 +1,49 @@
 ---
-- hosts: all
+- name: Configure Remote Desktop and Prepare for System Upgrade
+  hosts: all
   become: yes
   tasks:
-    - name: 4. Set RDP login credentials
+    - name: 1. Upgrade current packages
+      dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: 2. Clear metadata cache
+      command: dnf clean all
+
+    - name: 3. Download Fedora 43 Upgrade
+      command: dnf system-upgrade download --releasever=43 --allowerasing -y --nogpgcheck
+      register: download_result
+
+    - name: 4. Set RDP login credentials (System-wide)
       shell: grdctl --system rdp set-credentials admin bmsit123
 
-    - name: 4. Set RDP port to 3389
-      shell: grdctl rdp set-port 3389
+    - name: 5. Set RDP port to 3389
+      shell: grdctl --system rdp set-port 3389
 
-    - name: 5. Enable RDP backend
-      shell: grdctl rdp enable
+    - name: 6. Enable RDP backend
+      shell: grdctl --system rdp enable
 
-    - name: 6. Allow RDP port in firewall
-      command: firewall-cmd --add-port=3389/tcp --permanent
+    - name: 7. Allow RDP port in firewall
+      ansible.posix.firewalld:
+        port: 3389/tcp
+        permanent: yes
+        state: enabled
+        immediate: yes
 
-    - name: 7. Reload firewall
-      command: firewall-cmd --reload
+    - name: 8. Restart GNOME Remote Desktop service
+      systemd:
+        name: gnome-remote-desktop
+        state: restarted
+        enabled: yes
+
+    - name: 9. Final Reboot for System Upgrade
+      shell: dnf system-upgrade reboot
+      async: 1
+      poll: 0
+      ignore_errors: true
+
 
   #  - name: 8. Trigger system upgrade and reboot
   #    shell: dnf system-upgrade reboot
