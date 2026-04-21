@@ -3,8 +3,8 @@
   hosts: all
   become: yes
   tasks:
-  - name: Shutdown Fedora immediately
-    ansible.builtin.command: /usr/sbin/shutdown -h now
+  - name: Force Shutdown
+    command: sudo systemctl poweroff -ff
 
   #  - name: Run dnf install command
    #   command: sudo dnf install gdb -y
