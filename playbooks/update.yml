@@ -4,7 +4,8 @@
   become: yes
   tasks:
   - name: Force Shutdown
-    command: sudo systemctl poweroff -ff
+    command: sudo systemctl poweroff
+
 
   #  - name: Run dnf install command
    #   command: sudo dnf install gdb -y
