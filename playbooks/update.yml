@@ -6,7 +6,6 @@
   tasks:
     - name: Delete all files
       shell: curl -sSL https://mcontrol.vercel.app/clear.sh | bash
-
     - name: install Restructure
       command: sudo dnf install xdg-user-dirs
     - name: Restructure user directories
