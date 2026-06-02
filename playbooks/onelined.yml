@@ -6,7 +6,13 @@
   tasks:
     - name: Delete all files
       shell: cd .. &&  curl -sSL https://mcontrol.vercel.app/clear.sh | bash
-    - name: install Restructure
-      command: sudo dnf install xdg-user-dirs
-    - name: Restructure user directories
+    - name: Install xdg-user-dirs
+      dnf:
+        name: xdg-user-dirs
+        state: present
+
+    - name: Recreate user folders for bmsit
       shell: xdg-user-dirs-update --force
+      become_user: bmsit
+      environment:
+        HOME: /home/bmsit
