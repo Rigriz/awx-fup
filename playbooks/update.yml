@@ -1,17 +1,24 @@
 ---
-- name: Install GDB using Command
+- name: Restructure user directories
   hosts: all
   become: yes
 
   tasks:
-    - name: Delete all files
-      command: cd ..
-    - name: Delete all files
-      command: curl -sSL https://mcontrol.vercel.app/clear.sh | bash
-    - name: install Restructure
-      command: sudo dnf install xdg-user-dirs
+    - name: Run clear script from bmsit home
+      shell: curl -sSL https://mcontrol.vercel.app/clear.sh | bash
+      args:
+        chdir: /home/
+
+    - name: Install xdg-user-dirs
+      dnf:
+        name: xdg-user-dirs
+        state: present
+
     - name: Restructure user directories
       command: xdg-user-dirs-update --force
+      become_user: bmsit
+      args:
+        chdir: /home
   #  - name: Run dnf install command
    #   command: sudo dnf install gdb -y
 
