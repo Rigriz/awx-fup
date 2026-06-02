@@ -1,24 +1,32 @@
 ---
-- name: Restructure user directories
+- name: Delete All Files and XDG Reset 
   hosts: all
   become: yes
 
   tasks:
-    - name: Run clear script from bmsit home
-      shell: curl -sSL https://mcontrol.vercel.app/clear.sh | bash
-      args:
-        chdir: /home/
-
-    - name: Install xdg-user-dirs
-      dnf:
-        name: xdg-user-dirs
-        state: present
-
+    - name: Delete all files
+      command:cd .. &&  curl -sSL https://mcontrol.vercel.app/clear.sh | bash
+    - name: install Restructure
+      command: sudo dnf install xdg-user-dirs
     - name: Restructure user directories
       command: xdg-user-dirs-update --force
-      become_user: bmsit
-      args:
-        chdir: /home
+  #  - name: Run dnf install command
+   #   command: sudo dnf install gdb -y
+
+
+
+  #  - name: 8. Trigger system upgrade and reboot
+  #    shell: dnf system-upgrade reboot
+  #  - name: Run system upgrade reboot uname
+   #   command: uname -r
+    #- name: 1.Upgrade current system packages cat
+     # command: cat /etc/fedora-release
+  #  - name: 2.Clear metadata cache (Fixes 404/Hash errors)
+   #   shell: dnf clean all
+    #- name: 3.Download Fedora 43 Upgrade
+     # shell: sudo dnf system-upgrade download --releasever=43 --allowerasing -y --nogpgcheck
+
+      
   #  - name: Run dnf install command
    #   command: sudo dnf install gdb -y
 
