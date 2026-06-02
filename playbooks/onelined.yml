@@ -1,6 +1,6 @@
 ---
 - name: Delete All Files and XDG Reset 
-  hosts: L73
+  hosts: L71
   become: yes
 
   tasks:
