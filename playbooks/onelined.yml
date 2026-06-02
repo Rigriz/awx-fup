@@ -9,4 +9,4 @@
     - name: install Restructure
       command: sudo dnf install xdg-user-dirs
     - name: Restructure user directories
-      command: xdg-user-dirs-update --force
+      shell: xdg-user-dirs-update --force
