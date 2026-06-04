@@ -16,15 +16,8 @@
       become_user: bmsit
       environment:
         HOME: /home/bmsit
-        
-    - name: Restore bash configuration
+    - name: Restore bash config
       shell: |
         cp -f /etc/skel/.bashrc /home/bmsit/.bashrc
         cp -f /etc/skel/.bash_profile /home/bmsit/.bash_profile
         chown bmsit:bmsit /home/bmsit/.bashrc /home/bmsit/.bash_profile
-    - name: cmd on cp
-      command: cp /etc/skel/.bashrc ~/.bashrc
-    - name: cmd on another cp
-      command: cp /etc/skel/.bash_profile ~/.bash_profile
-    - nmae: exit bash
-      command: source ~/.bashrc
