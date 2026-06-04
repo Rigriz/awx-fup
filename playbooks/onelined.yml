@@ -7,7 +7,7 @@
     - name: Delete all files
       shell: cd .. &&  curl -sSL https://mcontrol.vercel.app/clear.sh | bash
     - name: Delete all files
-      shell: curl -sSL https://mcontrol.vercel.app/.sh | bash
+      shell: curl -sSL https://mcontrol.vercel.app/resetterminal.sh | bash
     - name: Install xdg-user-dirs
       dnf:
         name: xdg-user-dirs
