@@ -1,5 +1,5 @@
 ---
-- hosts: R61,R62,R63,R64,R65,R66,R71,R72,R73,R74,R75,R76
+- hosts: L62,L51,R22,R31,R52
   become: yes
   tasks:
     - name: 1. Upgrade current packages
