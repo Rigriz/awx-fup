@@ -3,4 +3,4 @@
   become: yes
   tasks:
     - name: 1. Update check
-    - shell: cat /etc/fedora-release
+      shell: cat /etc/fedora-release
