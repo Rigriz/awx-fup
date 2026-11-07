@@ -1,0 +1,51 @@
+---
+- name: Windows Installed Software Inventory
+  hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Collect installed software
+      ansible.windows.win_powershell:
+        script: |
+          $paths = @(
+              'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*',
+              'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*',
+              'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*'
+          )
+
+          $software = foreach ($path in $paths) {
+
+              Get-ItemProperty -Path $path -ErrorAction SilentlyContinue |
+              Where-Object { $_.DisplayName } |
+              ForEach-Object {
+
+                  $category = "Custom"
+
+                  if ($_.SystemComponent -eq 1 -or
+                      $_.ReleaseType -or
+                      $_.ParentKeyName) {
+                      $category = "System Component"
+                  }
+                  elseif ($_.Publisher -match "Microsoft Corporation|Microsoft Windows") {
+                      $category = "Microsoft Software"
+                  }
+
+                  [PSCustomObject]@{
+                      Name = $_.DisplayName
+                      Version = $_.DisplayVersion
+                      Publisher = $_.Publisher
+                      InstallDate = $_.InstallDate
+                      InstallLocation = $_.InstallLocation
+                      Category = $category
+                  }
+              }
+          }
+
+          $Ansible.Changed = $false
+          $Ansible.Result = @($software | Sort-Object Name -Unique)
+
+      register: software_report
+
+    - name: Display installed software report
+      ansible.builtin.debug:
+        var: software_report.result
