@@ -32,7 +32,7 @@ except Exception:
 
 # Get computer list from API
 computers = data.get("data", [])
-
+print("list",computers)
 # Iterate through all computers
 for computer in computers:
 
@@ -54,7 +54,8 @@ for computer in computers:
         "ansible_host": ip,
         "ansible_connection": "winrm",
         "ansible_user": "bmsit",
-        "ansible_password": password,
+        "ansible_password": "123456",
+        "ansible_become_password":"123456",
         "ansible_port": 5985,
         "ansible_winrm_transport": "ntlm",
         "ansible_winrm_server_cert_validation": "ignore"
