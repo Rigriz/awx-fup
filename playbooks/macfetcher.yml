@@ -1,1 +1,6 @@
-ip -o link show | awk '{print $17}'
+---
+- hosts: L62,L51,R22,R31,R52
+  become: yes
+  tasks:
+    - name: Mac Addr fetch
+      command: ip -o link show | awk '{print $17}'
