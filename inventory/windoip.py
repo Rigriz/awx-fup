@@ -15,7 +15,7 @@ import requests
 
 API_URL = os.getenv(
     "LAB_INVENTORY_API_URL",
-    "http://172.16.47.10:5000/api/labs/411B/computers",
+    "http://0.0.0.0:5000/api/labs/411B/computers",
 )
 LAB_GROUP = "lab_411B"
 ANSIBLE_USER = os.getenv("ANSIBLE_BMSIT_USER", "BMSIT")
