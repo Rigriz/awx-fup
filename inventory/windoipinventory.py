@@ -1,103 +1,62 @@
 #!/usr/bin/env python3
-"""
-AWX dynamic inventory for Lab 411B.
-
-Configure this script as an AWX Sourced Inventory (custom script).
-Set ANSIBLE_BMSIT_PASSWORD in the execution environment or inject it
-through an AWX custom credential. Do not store the password in this file.
-"""
-
-import json
-import os
-import sys
 
 import requests
+import json
+import sys
 
-API_URL = os.getenv(
-    "LAB_INVENTORY_API_URL",
-    "http://127.0.0.1:5000/api/labs/411B/computers",
-)
-LAB_GROUP = "lab_411B"
-ANSIBLE_USER = os.getenv("ANSIBLE_BMSIT_USER", "BMSIT")
-ANSIBLE_PASSWORD = os.getenv("ANSIBLE_BMSIT_PASSWORD")
+# API URL
+API_URL = "http://127.0.0.1:5000/api/labs/411B/computers"
 
-def fail(message):
-    print(f"Dynamic inventory error: {message}", file=sys.stderr)
-    sys.exit(1)
+# Initialize empty AWX inventory
+inventory = {
+    "_meta": {
+        "hostvars": {}
+    },
+    "all": {
+        "hosts": []
+    }
+}
 
-def main():
-    if not ANSIBLE_PASSWORD:
-        fail(
-            "ANSIBLE_BMSIT_PASSWORD is not set. "
-            "Inject it through an AWX credential or environment variable."
-        )
+try:
+    # Fetch Windows computer details from API
+    response = requests.get(API_URL, timeout=10)
+    response.raise_for_status()
 
-    try:
-        response = requests.get(API_URL, timeout=15)
-        response.raise_for_status()
-        payload = response.json()
-    except requests.RequestException as exc:
-        fail(f"Could not retrieve lab inventory from {API_URL}: {exc}")
-    except ValueError:
-        fail("The lab inventory API did not return valid JSON.")
+    data = response.json()
 
-    # Expected API response:
-    # {
-    #   "success": true,
-    #   "lab": "411B",
-    #   "total_computers": 59,
-    #   "data": [{"hostname": "L21", "system_name": "L21",
-    #             "ip": "...", "mac": "...", ...}]
-    # }
-    if payload.get("success") is not True:
-        fail(f"API reported failure: {payload}")
+except Exception:
+    # Return empty inventory if API fails
+    print(json.dumps(inventory))
+    sys.exit(0)
 
-    computers = payload.get("data")
-    if not isinstance(computers, list):
-        fail("API response is missing the expected 'data' list.")
 
-    inventory = {
-        "_meta": {"hostvars": {}},
-        "all": {"children": [LAB_GROUP]},
-        LAB_GROUP: {"hosts": []},
+# Get computer list from API
+computers = data.get("data", [])
+
+# Iterate through all computers
+for computer in computers:
+
+    hostname = computer.get("hostname")
+    ip = computer.get("ip")
+
+    # Skip invalid entries
+    if not hostname or not ip:
+        continue
+
+    # Add hostname to AWX inventory
+    inventory["all"]["hosts"].append(hostname)
+
+    # Assign/update host variables
+    inventory["_meta"]["hostvars"][hostname] = {
+        "ansible_host": ip,
+        "ansible_connection": "winrm",
+        "ansible_user": "Administrator",
+        "ansible_password": "YOUR_WINDOWS_PASSWORD",
+        "ansible_port": 5985,
+        "ansible_winrm_transport": "ntlm",
+        "ansible_winrm_server_cert_validation": "ignore"
     }
 
-    for computer in computers:
-        if not isinstance(computer, dict):
-            continue
 
-        # Use system_name as the stable Ansible inventory hostname.
-        host_name = computer.get("system_name") or computer.get("hostname")
-        ip_address = computer.get("ip")
-        mac_address = computer.get("mac")
-
-        if not host_name or not ip_address:
-            print(
-                f"Skipping record without hostname/system_name or IP: {computer}",
-                file=sys.stderr,
-            )
-            continue
-
-        inventory[LAB_GROUP]["hosts"].append(host_name)
-        inventory["_meta"]["hostvars"][host_name] = {
-            "ansible_host": ip_address,
-            "ansible_connection": "ssh",
-            "ansible_user": ANSIBLE_USER,
-            "ansible_password": ANSIBLE_PASSWORD,
-            "ansible_become": True,
-            "ansible_become_password": ANSIBLE_PASSWORD,
-            "ansible_ssh_common_args": "-o StrictHostKeyChecking=no",
-            "system_name": host_name,
-            "mac_address": mac_address,
-            "computer_status": computer.get("status"),
-            "last_seen": computer.get("last_seen"),
-            "lab_name": payload.get("lab", "411B"),
-        }
-
-    if not inventory[LAB_GROUP]["hosts"]:
-        fail("API returned no usable computers; refusing to publish an empty inventory.")
-
-    print(json.dumps(inventory))
-
-if __name__ == "__main__":
-    main()
+# Print final JSON inventory for AWX
+print(json.dumps(inventory))
