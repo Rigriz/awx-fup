@@ -1,10 +1,16 @@
 ---
-- name: Get Fedora MAC Address
+- name: Get MAC Address from Fedora
   hosts: all
-  become: no
   gather_facts: yes
+  become: no
 
   tasks:
+    - name: Display network interfaces
+      debug:
+        var: ansible_interfaces
+
     - name: Display MAC addresses
       debug:
-        var: ansible_facts['ansible_interfaces']
+        msg: "{{ ansible_facts[item]['macaddress'] }}"
+      loop: "{{ ansible_interfaces }}"
+      when: ansible_facts[item]['macaddress'] is defined
