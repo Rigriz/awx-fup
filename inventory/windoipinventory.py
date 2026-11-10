@@ -5,7 +5,7 @@ import json
 import sys
 
 # API URL
-API_URL = "http://127.0.0.1:5000/api/labs/411B/computers"
+API_URL = "http://10.42.0.1:5000/api/labs/411B/computers"
 
 # Initialize empty AWX inventory
 inventory = {
