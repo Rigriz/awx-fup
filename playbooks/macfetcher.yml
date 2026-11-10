@@ -1,5 +1,5 @@
 ---
-- hosts: L62,L51,R22,R31,R52
+- hosts: all
   become: yes
   tasks:
     - name: Mac Addr fetch
