@@ -46,12 +46,15 @@ for computer in computers:
     # Add hostname to AWX inventory
     inventory["all"]["hosts"].append(hostname)
 
+    # Generate password by adding 'w' to hostname
+    password = "w" + hostname
+
     # Assign/update host variables
     inventory["_meta"]["hostvars"][hostname] = {
         "ansible_host": ip,
         "ansible_connection": "winrm",
-        "ansible_user": "Administrator",
-        "ansible_password": "YOUR_WINDOWS_PASSWORD",
+        "ansible_user": "bmsit",
+        "ansible_password": password,
         "ansible_port": 5985,
         "ansible_winrm_transport": "ntlm",
         "ansible_winrm_server_cert_validation": "ignore"
