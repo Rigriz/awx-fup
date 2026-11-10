@@ -1,0 +1,1 @@
+ip -o link show | awk '{print $17}'
