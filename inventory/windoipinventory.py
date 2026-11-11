@@ -48,10 +48,12 @@ for computer in computers:
         continue
 
     # Add hostname to AWX inventory
-    inventory["all"]["hosts"].append(hostname)
+    new_hostname = "W" + hostname
+
+    inventory["all"]["hosts"].append(new_hostname)
 
     # Assign/update host variables
-    inventory["_meta"]["hostvars"][hostname] = {
+    inventory["_meta"]["hostvars"][new_hostname] = {
         "ansible_host": ip,
         "ansible_connection": "winrm",
         "ansible_user": "bmsit",
