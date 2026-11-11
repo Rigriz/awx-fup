@@ -47,13 +47,15 @@ for computer in computers:
     if not hostname or not ip:
         continue
 
-    # Add hostname to AWX inventory
+    # Add W prefix to inventory hostname
     new_hostname = "W" + hostname
 
+    # Add new hostname to AWX inventory
     inventory["all"]["hosts"].append(new_hostname)
 
     # Assign/update host variables
     inventory["_meta"]["hostvars"][new_hostname] = {
+
         "ansible_host": ip,
         "ansible_connection": "winrm",
         "ansible_user": "bmsit",
