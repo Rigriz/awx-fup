@@ -1,0 +1,120 @@
+---
+# ==========================================================
+# PLAY 1: FETCH API DATA AND BUILD WINDOWS INVENTORY
+# ==========================================================
+
+- name: Fetch Lab 411B computers
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    api_url: "http://172.16.47.2:5000/api/labs/411B/computers"
+
+    winrm_username: "{{ lookup('env', 'WINRM_USER') | default('bmsit', true) }}"
+    winrm_password: "{{ lookup('env', 'WINRM_PASSWORD') }}"
+
+  tasks:
+
+    - name: Check WinRM password is available
+      ansible.builtin.assert:
+        that:
+          - winrm_password | length > 0
+        fail_msg: "WINRM_PASSWORD environment variable is missing."
+
+    - name: Fetch computers from Lab 411B API
+      ansible.builtin.uri:
+        url: "{{ api_url }}"
+        method: GET
+        return_content: true
+        status_code: 200
+      register: api_response
+
+    - name: Validate API response
+      ansible.builtin.assert:
+        that:
+          - api_response.json.success | bool
+          - api_response.json.data is defined
+          - api_response.json.data | length > 0
+        fail_msg: "Unable to retrieve computers from Lab API."
+
+    - name: Display number of computers fetched
+      ansible.builtin.debug:
+        msg: "Fetched {{ api_response.json.data | length }} computers."
+
+    # ------------------------------------------------------
+    # DYNAMICALLY CREATE HOSTS
+    # ------------------------------------------------------
+
+    - name: Add Windows computers to dynamic inventory
+      ansible.builtin.add_host:
+        name: >-
+          W{{ (item.system_name | default(item.hostname))
+          | regex_replace('^[A-Za-z]+', '') 
+          if ((item.system_name | default(item.hostname))
+          | regex_replace('^[A-Za-z]+', '') | length > 0)
+          else (item.system_name | default(item.hostname)) }}
+        groups: lab_411B
+
+        ansible_host: "{{ item.ip }}"
+
+        ansible_connection: winrm
+        ansible_port: 5985
+        ansible_user: "{{ winrm_username }}"
+        ansible_password: "{{ winrm_password }}"
+
+        ansible_winrm_scheme: http
+        ansible_winrm_transport: ntlm
+
+        ansible_winrm_operation_timeout_sec: 60
+        ansible_winrm_read_timeout_sec: 70
+
+        original_hostname: "{{ item.system_name | default(item.hostname) }}"
+        computer_ip: "{{ item.ip }}"
+
+      loop: "{{ api_response.json.data }}"
+      loop_control:
+        label: "{{ item.system_name | default(item.hostname) }}"
+
+      when:
+        - item.ip is defined
+        - item.system_name is defined or item.hostname is defined
+
+      no_log: true
+
+    - name: Confirm inventory creation
+      ansible.builtin.debug:
+        msg: "Windows inventory has been created successfully."
+
+
+# ==========================================================
+# PLAY 2: CONNECT TO ALL WINDOWS COMPUTERS USING WINRM
+# ==========================================================
+
+- name: Test Windows computer connections
+  hosts: lab_411B
+  gather_facts: false
+
+  tasks:
+
+    - name: Test WinRM connectivity
+      ansible.windows.win_ping:
+      register: winrm_result
+      ignore_errors: true
+
+    - name: Display WinRM connection result
+      ansible.builtin.debug:
+        msg: >-
+          {{ inventory_hostname }} ({{ ansible_host }})
+          connection status:
+          {{ 'SUCCESS' if winrm_result.ping is defined else 'FAILED' }}
+
+    - name: Retrieve Windows hostname
+      ansible.windows.win_shell: hostname
+      register: windows_hostname
+      when: winrm_result.ping is defined
+
+    - name: Display Windows hostname
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} -> {{ windows_hostname.stdout | trim }}"
+      when: winrm_result.ping is defined
